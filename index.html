@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login - PT Klase Auto Graha</title> 
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e40af">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="KAR Mobile">
+    <link rel="apple-touch-icon" href="https://lnyvysxqzfywirypspfh.supabase.co/storage/v1/object/public/logo/klase.png">
+
+    <script src="https://unpkg.com/dexie/dist/dexie.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style> 
+        body { font-family: 'Inter', sans-serif; } 
+        .toggle-password { cursor: pointer; user-select: none; }
+        #installArea.hidden { display: none; }
+    </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-200">
+        <div class="text-center mb-8">
+            <img src="https://lnyvysxqzfywirypspfh.supabase.co/storage/v1/object/public/logo/klase.png" alt="Logo PT Klase Auto Graha" class="h-20 mx-auto mb-4 object-contain">         
+            <h2 class="text-xl font-bold text-slate-800">PT Klase Auto Graha</h2>
+            <p class="text-slate-500 text-sm">Sistem Manajemen Pengiriman Dokumen</p>
+        </div>
+
+        <div id="installArea" class="hidden mb-6">
+            <button id="btnInstall" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2 transition-all">
+                <i class="fas fa-download"></i> INSTAL APLIKASI KAR MOBILE
+            </button>
+            <div class="relative flex py-5 items-center">
+                <div class="flex-grow border-t border-slate-200"></div>
+                <span class="flex-shrink mx-4 text-slate-400 text-xs">atau login di bawah</span>
+                <div class="flex-grow border-t border-slate-200"></div>
+            </div>
+        </div>
+
+        <div id="loginForm">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700">Email</label>
+                    <input type="email" id="loginUser" class="mt-1 block w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="kurir@email.com">
+                </div>
+                <div class="relative">
+                    <label class="block text-sm font-medium text-slate-700">Password</label>
+                    <input type="password" id="loginPass" class="mt-1 block w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition pr-10" placeholder="••••••">
+                    <i class="fas fa-eye toggle-password absolute right-3 top-9 text-slate-400 hover:text-slate-600" id="toggleLoginPass"></i>
+                </div>
+                <button id="btnLogin" class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
+                    Masuk Sistem
+                </button>
+            </div>
+            <div class="mt-6 text-center">
+                <button type="button" id="btnToggleRegister" class="text-sm text-blue-600 hover:text-blue-500 font-medium">Belum punya akun? Daftar Kurir</button>
+            </div>
+        </div>
+
+        <div id="registerForm" class="hidden">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700">Nama Lengkap</label>
+                    <input type="text" id="regName" class="mt-1 block w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700">Email</label>
+                    <input type="email" id="regEmail" class="mt-1 block w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                </div>
+                <div class="relative">
+                    <label class="block text-sm font-medium text-slate-700">Password</label>
+                    <input type="password" id="regPass" class="mt-1 block w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition pr-10" placeholder="••••••">
+                    <i class="fas fa-eye toggle-password absolute right-3 top-9 text-slate-400 hover:text-slate-600" id="toggleRegPass"></i>
+                </div>
+                <button id="btnRegister" class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 transition">
+                    Daftar Akun
+                </button>
+            </div>
+            <div class="mt-6 text-center">
+                <button type="button" id="btnToggleLogin" class="text-sm text-slate-600 hover:text-slate-800 font-medium">Kembali ke Login</button>
+            </div>
+        </div>
+
+        <p id="msg" class="mt-4 text-center text-red-500 text-sm font-medium min-h-[20px]"></p>
+    </div>
+
+    <script>
+    (function() {
+        'use strict';
+
+        const SUPABASE_URL = 'https://lnyvysxqzfywirypspfh.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxueXZ5c3hxemZ5d2lyeXBzcGZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTk2OTQsImV4cCI6MjEwNzczNTY5NH0.40NFLguRJGguHoqTayD6YvaM-pOrtOa6IyHCSDWOmRk'; // Masukkan Anon Key project baru Anda di sini
+        const ADMIN_USER = "admin";
+        const ADMIN_PASS = "admin123";
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let deferredPrompt;
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.error(err));
+            });
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installArea').classList.remove('hidden');
+        });
+
+        document.getElementById('btnInstall')?.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    document.getElementById('installArea').classList.add('hidden');
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (!input || !icon) return;
+            input.type = input.type === "password" ? "text" : "password";
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        }
+
+        function toggleView() {
+            document.getElementById('loginForm').classList.toggle('hidden');
+            document.getElementById('registerForm').classList.toggle('hidden');
+            document.getElementById('msg').innerText = '';
+        }
+
+        async function handleLogin() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value;
+            const msg = document.getElementById('msg');
+            const btn = document.getElementById('btnLogin');
+
+            btn.innerText = "Memuat...";
+            btn.disabled = true;
+            msg.innerText = '';
+
+            try {
+                if (user === ADMIN_USER && pass === ADMIN_PASS) {
+                    localStorage.setItem('role', 'admin');
+                    window.location.replace('admin.html');
+                    return;
+                }
+
+                const { data, error } = await supabase.auth.signInWithPassword({ email: user, password: pass });
+                if (error) throw error;
+
+                localStorage.setItem('role', 'kurir');
+                localStorage.setItem('userId', data.user.id);
+                window.location.replace('Dashboard.html');
+
+            } catch (err) {
+                msg.innerText = "Email atau password salah.";
+            } finally {
+                btn.innerText = "Masuk Sistem";
+                btn.disabled = false;
+            }
+        }
+
+        async function handleRegister() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const pass = document.getElementById('regPass').value;
+            const msg = document.getElementById('msg');
+            const btn = document.getElementById('btnRegister');
+
+            if (!name || !email || !pass) {
+                msg.innerText = "Semua field wajib diisi.";
+                return;
+            }
+
+            btn.innerText = "Mendaftar...";
+            btn.disabled = true;
+
+            try {
+                const { error } = await supabase.auth.signUp({
+                    email: email, password: pass, options: { data: { full_name: name } }
+                });
+                if (error) throw error;
+                alert('Berhasil! Silakan langsung login.');
+                toggleView();
+            } catch (err) {
+                msg.innerText = err.message;
+            } finally {
+                btn.innerText = "Daftar Akun";
+                btn.disabled = false;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('toggleLoginPass').onclick = () => togglePassword('loginPass', 'toggleLoginPass');
+            document.getElementById('toggleRegPass').onclick = () => togglePassword('regPass', 'toggleRegPass');
+            document.getElementById('btnToggleRegister').onclick = toggleView;
+            document.getElementById('btnToggleLogin').onclick = toggleView;
+            document.getElementById('btnLogin').onclick = handleLogin;
+            document.getElementById('btnRegister').onclick = handleRegister;
+        });
+    })();
+    </script>
+</body>
+</html>
